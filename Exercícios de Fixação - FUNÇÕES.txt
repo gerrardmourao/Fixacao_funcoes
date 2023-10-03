@@ -1,0 +1,163 @@
+-- 1. Funções de Texto:
+
+-- a) Criar tabela nomes com uma coluna nome contendo os seguintes nomes:
+CREATE TABLE nomes (
+    nome VARCHAR(50)
+);
+
+INSERT INTO nomes (nome) VALUES
+    ('Roberta'),
+    ('Roberto'),
+    ('Maria Clara'),
+    ('João');
+
+-- b) Utilize a função UPPER() para converter todos os nomes para maiúsculas:
+UPDATE nomes
+SET nome = UPPER(nome);
+
+-- c) Use a função LENGTH() para determinar o tamanho de cada nome:
+SELECT nome, LENGTH(nome) AS tamanho
+FROM nomes;
+
+-- d) Use a função CONCAT() para adicionar "Sr. " antes dos nomes masculinos e "Sra. " antes dos nomes femininos:
+UPDATE nomes
+SET nome = CONCAT(
+    CASE WHEN nome LIKE '%o' THEN 'Sr. ' ELSE 'Sra. ' END,
+    nome
+);
+
+-- 2. Funções Numéricas:
+
+-- a) Criar tabela produtos com as colunas produto, preco e quantidade:
+CREATE TABLE produtos (
+    produto VARCHAR(50),
+    preco DECIMAL(10, 2),
+    quantidade INT
+);
+
+-- b) Utilize a função ROUND() para arredondar os preços para 2 casas decimais:
+UPDATE produtos
+SET preco = ROUND(preco, 2);
+
+-- c) Use a função ABS() para exibir o valor absoluto das quantidades:
+SELECT produto, ABS(quantidade) AS valor_absoluto
+FROM produtos;
+
+-- d) Calcule a média dos preços dos produtos utilizando a função AVG():
+SELECT AVG(preco) AS media_precos
+FROM produtos;
+
+-- 3. Funções de Data:
+
+-- a) Crie uma tabela eventos com uma coluna data_evento contendo algumas datas:
+CREATE TABLE eventos (
+    data_evento DATE
+);
+
+INSERT INTO eventos (data_evento) VALUES
+    ('2023-10-01'),
+    ('2023-10-05'),
+    ('2023-10-10');
+
+-- b) Utilize a função NOW() para inserir a data e hora atual em uma nova linha:
+INSERT INTO eventos (data_evento)
+VALUES (NOW());
+
+-- c) Use a função DATEDIFF() para calcular o número de dias entre duas datas:
+SELECT DATEDIFF('2023-10-10', '2023-10-01') AS dias_diff;
+
+-- d) Utilize a função DAYNAME() para exibir o nome do dia da semana de cada evento:
+SELECT data_evento, DAYNAME(data_evento) AS nome_dia_semana
+FROM eventos;
+
+-- 4. Funções de Controle de Fluxo:
+
+-- a) Em sua tabela produtos, use a função IF() para determinar se um produto está "Em estoque" ou "Fora de estoque" baseado na quantidade:
+SELECT produto,
+    IF(quantidade > 0, 'Em estoque', 'Fora de estoque') AS status_estoque
+FROM produtos;
+
+-- b) Use a função CASE para classificar os produtos em categorias de preço: "Barato", "Médio" e "Caro":
+SELECT produto,
+    CASE
+        WHEN preco < 50 THEN 'Barato'
+        WHEN preco >= 50 AND preco <= 100 THEN 'Médio'
+        ELSE 'Caro'
+    END AS categoria_preco
+FROM produtos;
+
+-- 5. Função Personalizada:
+
+-- a) Crie uma função chamada TOTAL_VALOR que receba preço e quantidade, e retorne o valor total:
+DELIMITER //
+CREATE FUNCTION TOTAL_VALOR(preco DECIMAL(10, 2), quantidade INT)
+RETURNS DECIMAL(10, 2)
+BEGIN
+    RETURN preco * quantidade;
+END //
+DELIMITER ;
+
+-- b) Use esta função para calcular o valor total de cada item em sua tabela produtos:
+SELECT produto, quantidade, preco, TOTAL_VALOR(preco, quantidade) AS valor_total
+FROM produtos;
+
+-- 6. Funções de Agregação:
+
+-- a) Conte o número total de produtos usando a função COUNT():
+SELECT COUNT(*) AS total_produtos
+FROM produtos;
+
+-- b) Determine o produto mais caro usando a função MAX():
+SELECT produto, preco
+FROM produtos
+WHERE preco = (SELECT MAX(preco) FROM produtos);
+
+-- c) Determine o produto mais barato usando a função MIN():
+SELECT produto, preco
+FROM produtos
+WHERE preco = (SELECT MIN(preco) FROM produtos);
+
+-- d) Calcule a soma total dos produtos em estoque utilizando as funções SUM() e IF():
+SELECT SUM(IF(quantidade > 0, preco, 0)) AS total_em_estoque
+FROM produtos;
+
+-- 7. Criando funções:
+
+-- a) Crie uma função que retorne o Fatorial de um número:
+DELIMITER //
+CREATE FUNCTION Fatorial(numero INT)
+RETURNS INT
+BEGIN
+    DECLARE resultado INT;
+    SET resultado = 1;
+    WHILE numero > 0 DO
+        SET resultado = resultado * numero;
+        SET numero = numero - 1;
+    END WHILE;
+    RETURN resultado;
+END //
+DELIMITER ;
+
+-- b) Crie uma função que calcule o exponencial de um número:
+DELIMITER //
+CREATE FUNCTION f_exponencial(base DECIMAL(10, 2), expoente INT)
+RETURNS DECIMAL(10, 2)
+BEGIN
+    RETURN POW(base, expoente);
+END //
+DELIMITER ;
+
+-- c) Crie uma função que verifica se uma palavra é palíndromo ou não. Retorne 1 se for palíndromo ou 0 se não for:
+DELIMITER //
+CREATE FUNCTION e_palindromo(palavra VARCHAR(100))
+RETURNS INT
+BEGIN
+    DECLARE reverso VARCHAR(100);
+    SET reverso = REVERSE(palavra);
+    IF palavra = reverso THEN
+        RETURN 1;
+    ELSE
+        RETURN 0;
+    END IF;
+END //
+DELIMITER ;
