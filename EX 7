@@ -1,0 +1,40 @@
+-- 7. Criando funções:
+
+-- a) Crie uma função que retorne o Fatorial de um número:
+DELIMITER //
+CREATE FUNCTION Fatorial(numero INT)
+RETURNS INT
+BEGIN
+    DECLARE resultado INT;
+    SET resultado = 1;
+    WHILE numero > 0 DO
+        SET resultado = resultado * numero;
+        SET numero = numero - 1;
+    END WHILE;
+    RETURN resultado;
+END //
+DELIMITER ;
+
+-- b) Crie uma função que calcule o exponencial de um número:
+DELIMITER //
+CREATE FUNCTION f_exponencial(base DECIMAL(10, 2), expoente INT)
+RETURNS DECIMAL(10, 2)
+BEGIN
+    RETURN POW(base, expoente);
+END //
+DELIMITER ;
+
+-- c) Crie uma função que verifica se uma palavra é palíndromo ou não. Retorne 1 se for palíndromo ou 0 se não for:
+DELIMITER //
+CREATE FUNCTION e_palindromo(palavra VARCHAR(100))
+RETURNS INT
+BEGIN
+    DECLARE reverso VARCHAR(100);
+    SET reverso = REVERSE(palavra);
+    IF palavra = reverso THEN
+        RETURN 1;
+    ELSE
+        RETURN 0;
+    END IF;
+END //
+DELIMITER ;
