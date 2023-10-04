@@ -1,0 +1,22 @@
+-- 3. Funções de Data:
+
+-- a) Crie uma tabela eventos com uma coluna data_evento contendo algumas datas:
+CREATE TABLE eventos (
+    data_evento DATE
+);
+
+INSERT INTO eventos (data_evento) VALUES
+    ('2023-10-01'),
+    ('2023-10-05'),
+    ('2023-10-10');
+
+-- b) Utilize a função NOW() para inserir a data e hora atual em uma nova linha:
+INSERT INTO eventos (data_evento)
+VALUES (NOW());
+
+-- c) Use a função DATEDIFF() para calcular o número de dias entre duas datas:
+SELECT DATEDIFF('2023-10-10', '2023-10-01') AS dias_diff;
+
+-- d) Utilize a função DAYNAME() para exibir o nome do dia da semana de cada evento:
+SELECT data_evento, DAYNAME(data_evento) AS nome_dia_semana
+FROM eventos;
