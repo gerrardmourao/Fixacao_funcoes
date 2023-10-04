@@ -1,0 +1,20 @@
+-- 2. Funções Numéricas:
+
+-- a) Criar tabela produtos com as colunas produto, preco e quantidade:
+CREATE TABLE produtos (
+    produto VARCHAR(50),
+    preco DECIMAL(10, 2),
+    quantidade INT
+);
+
+-- b) Utilize a função ROUND() para arredondar os preços para 2 casas decimais:
+UPDATE produtos
+SET preco = ROUND(preco, 2);
+
+-- c) Use a função ABS() para exibir o valor absoluto das quantidades:
+SELECT produto, ABS(quantidade) AS valor_absoluto
+FROM produtos;
+
+-- d) Calcule a média dos preços dos produtos utilizando a função AVG():
+SELECT AVG(preco) AS media_precos
+FROM produtos;
